@@ -30,7 +30,7 @@ internal sealed class AdapterDemoPlugin : IBotCommand2
         const string cmdPrefix = "ADP"; //插件命令前缀
         const string repoName = "chr233/ASFEnhanceAdapterDemoPlugin"; //自动更新仓库名称 比如 ASFEnhance 或 chr233/ASFEnhance (用户默认为chr233), 不需要自动更新可以设为 null
 
-        ASFEBridge = AdapterBtidge.InitAdapter(Name, pluginId, cmdPrefix, repoName, handler);
+        ASFEBridge = AdapterBridge.InitAdapter(Name, pluginId, cmdPrefix, repoName, handler);
 
         if (ASFEBridge)
         {

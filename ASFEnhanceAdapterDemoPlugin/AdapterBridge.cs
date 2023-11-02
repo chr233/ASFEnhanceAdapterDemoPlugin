@@ -1,7 +1,7 @@
 using System.Reflection;
 
 namespace AdapterDemoPlugin;
-internal static class AdapterBtidge
+internal static class AdapterBridge
 {
     /// <summary>
     /// 注册子模块

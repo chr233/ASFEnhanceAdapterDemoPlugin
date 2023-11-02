@@ -1,11 +1,7 @@
 # ASFEnhanceAdapterDemoPlugin
 
-[![GitHub Release](https://img.shields.io/github/v/release/chr233/ASFEnhanceAdapterDemoPlugin?logo=github)](https://github.com/chr233/ASFEnhanceAdapterDemoPlugin/releases)
-[![GitHub Release](https://img.shields.io/github/v/release/chr233/ASFEnhanceAdapterDemoPlugin?include_prereleases&label=pre-release&logo=github)](https://github.com/chr233/ASFEnhanceAdapterDemoPlugin/releases)
-![GitHub last commit](https://img.shields.io/github/last-commit/chr233/ASFEnhanceAdapterDemoPlugin?logo=github)
-
 ![GitHub Repo stars](https://img.shields.io/github/stars/chr233/ASFEnhanceAdapterDemoPlugin?logo=github)
-[![GitHub Download](https://img.shields.io/github/downloads/chr233/ASFEnhanceAdapterDemoPlugin/total?logo=github)](https://img.shields.io/github/v/release/chr233/ASFEnhanceAdapterDemoPlugin)
+![GitHub last commit](https://img.shields.io/github/last-commit/chr233/ASFEnhanceAdapterDemoPlugin?logo=github)
 [![License](https://img.shields.io/github/license/chr233/ASFEnhanceAdapterDemoPlugin?logo=apache)](https://github.com/chr233/ASFEnhanceAdapterDemoPlugin/blob/master/license)
 
 [![Bilibili](https://img.shields.io/badge/bilibili-Chr__-00A2D8.svg?logo=bilibili)](https://space.bilibili.com/5805394)
@@ -18,12 +14,6 @@
 
 ## 安装方式
 
-### 初次安装 / 手动更新
-
-1. 从 [GitHub Releases](https://github.com/chr233/ASFEnhanceAdapterDemoPlugin/releases) 下载插件的最新版本
-2. 解压后将 `ASFEnhanceAdapterDemoPlugin.dll` 丢进 `ArchiSteamFarm` 目录下的 `plugins` 文件夹
-3. 重新启动 `ArchiSteamFarm` , 使用命令 `ASFEnhanceAdapterDemoPlugin` 或 `ADP` 来检查插件是否正常工作
-
 ### ASFEnhance 联动
 
 > 推荐搭配 [ASFEnhance](https://github.com/chr233/ASFEnhance) 使用, 可以通过 ASFEnhance 实现插件更新管理和禁用特定命令等功能
@@ -33,3 +23,21 @@
 | 命令                          | 缩写  | 权限            | 说明                                    |
 | ----------------------------- | ----- | --------------- | --------------------------------------- |
 | `ASFEnhanceAdapterDemoPlugin` | `ADP` | `FamilySharing` | 查看 ASFEnhanceAdapterDemoPlugin 的版本 |
+
+## 接入 ASFEnhance 步骤
+
+1. 将 `AdapterBridge.cs` 添加到项目
+2. 在 `OnLoaded` 事件中向 `ASFEnhance` 注册插件, 代码如下
+
+   ```cshape
+    var flag = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+    var handler = typeof(AdapterDemoPlugin).GetMethod(nameof(ResponseCommand), flag);
+
+    const string pluginId = nameof(AdapterDemoPlugin); //插件标识符
+    const string cmdPrefix = "ADP"; //插件命令前缀
+    const string repoName = "chr233/ASFEnhanceAdapterDemoPlugin"; //自动更新仓库名称 比如 ASFEnhance 或 chr233/ASFEnhance (用户默认为chr233), 不需要自动更新可以设为 null
+
+    var registered = AdapterBridge.InitAdapter(Name, pluginId, cmdPrefix, repoName, handler);
+   ```
+
+   注册成功时返回 `true`, 否则返回 `false`, 注册成功后无需在 `OnBotCommand` 中处理命令, 会由 `ASFEnhance` 通过反射调用命令响应函数.
